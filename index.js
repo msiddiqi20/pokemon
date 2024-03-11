@@ -1,5 +1,6 @@
 let cardRow = document.getElementById("card-row");
 let cardTemplate = document.getElementById("card");
+let badge = document.getElementById("badge");
 
 async function getPokemon() {
   for (let i = 1; i <= 493; i++) {
@@ -17,12 +18,13 @@ async function getPokemon() {
 
     let cardBody = cardClone.querySelector(".card-body");
     let pokemonDisplayName =
-      pokemon.data.name.charAt(0).toUpperCase() + pokemon.data.name.slice(1);
-    cardBody.firstChild.textContent = pokemonDisplayName;
+      pokemon.data.name.split("-")[0].charAt(0).toUpperCase() +
+      pokemon.data.name.split("-")[0].slice(1);
+    cardBody.firstElementChild.textContent = pokemonDisplayName;
 
     for (let flavorTextEntry of pokemonSpecies.data.flavor_text_entries) {
       if (flavorTextEntry.language.name == "en") {
-        cardBody.lastChild.textContent = flavorTextEntry.flavor_text;
+        cardBody.lastElementChild.textContent = flavorTextEntry.flavor_text;
         break;
       }
     }
@@ -30,7 +32,19 @@ async function getPokemon() {
     let cardFooter = cardClone.querySelector(".card-footer");
 
     pokemon.data.types.forEach((typeEntry) => {
-      cardFooter.firstChild.textContent += `${typeEntry.type.name},`;
+      let typeBadge = badge.content.cloneNode(true);
+      typeBadge = typeBadge.querySelector("span");
+
+      let typeName =
+        typeEntry.type.name.charAt(0).toUpperCase() +
+        typeEntry.type.name.slice(1);
+      typeBadge.textContent = typeName;
+
+      if (cardFooter.firstElementChild) {
+        typeBadge.classList.add("mx-2");
+      }
+
+      cardFooter.appendChild(typeBadge);
     });
 
     cardRow.appendChild(cardClone);

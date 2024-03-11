@@ -1,3 +1,16 @@
 #logo-text {
   font-size: 25px;
 }
+
+#card-row img {
+  background-image: url(other/pokebackground.png);
+  background-size: cover;
+}
+
+.card {
+  transition: 0.5s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
