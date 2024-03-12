@@ -87,3 +87,43 @@ cardRow.addEventListener("click", (event) => {
     opposingPokemon.alt = `A Picture of ${randomPokemon}`;
   }
 });
+
+cardRow.addEventListener("mouseover", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  let target = event.target;
+
+  if (target.id != "card-row" && !target.classList.contains("col")) {
+    while (!target.classList.contains("col")) {
+      target = target.parentNode;
+    }
+
+    let selectedPokemon = pokemonMap.get(parseInt(target.id));
+
+    let selectedCard = document.getElementById(target.id);
+    selectedCard.querySelector(
+      "img"
+    ).src = `PokemonGifs/FrontShiny/${selectedPokemon}.gif`;
+  }
+});
+
+cardRow.addEventListener("mouseout", async (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  let target = event.target;
+
+  if (target.id != "card-row" && !target.classList.contains("col")) {
+    while (!target.classList.contains("col")) {
+      target = target.parentNode;
+    }
+
+    let response = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${parseInt(target.id)}/`
+    );
+
+    let selectedCard = document.getElementById(target.id);
+    selectedCard.querySelector("img").src = response.data.sprites.front_shiny;
+  }
+});
