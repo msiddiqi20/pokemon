@@ -1,6 +1,13 @@
-let cardRow = document.getElementById("card-row");
-let cardTemplate = document.getElementById("card");
-let badge = document.getElementById("badge");
+const cardRow = document.getElementById("card-row");
+const cardTemplate = document.getElementById("card");
+const badge = document.getElementById("badge");
+const chosenPokemon = document.getElementById("chosen-pokemon");
+const opposingPokemon = document.getElementById("opposing-pokemon");
+const offCanvas = new bootstrap.Offcanvas(
+  document.getElementById("offcanvasTop")
+);
+
+const pokemonMap = new Map();
 
 async function getPokemon() {
   for (let i = 1; i <= 493; i++) {
@@ -11,6 +18,9 @@ async function getPokemon() {
     );
 
     let cardClone = cardTemplate.content.cloneNode(true);
+
+    cardClone.querySelector(".col").id = i;
+    pokemonMap.set(i, pokemon.data.name.toUpperCase());
 
     let cardImg = cardClone.querySelector(".card-img-top");
     cardImg.src = pokemon.data.sprites.front_shiny;
@@ -52,3 +62,28 @@ async function getPokemon() {
 }
 
 getPokemon();
+
+cardRow.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+
+  let target = event.target;
+
+  if (target.id != "card-row" && !target.classList.contains("col")) {
+    while (!target.classList.contains("col")) {
+      target = target.parentNode;
+    }
+
+    let selectedPokemon = pokemonMap.get(parseInt(target.id));
+    console.log(selectedPokemon);
+
+    chosenPokemon.src = `PokemonGifs/FrontShiny/${selectedPokemon}.gif`;
+    chosenPokemon.alt = `A Picture of ${selectedPokemon}`;
+
+    let random = Math.floor(Math.random() * 493) + 1;
+    let randomPokemon = pokemonMap.get(random);
+
+    opposingPokemon.src = `PokemonGifs/FrontShiny/${randomPokemon}.gif`;
+    opposingPokemon.alt = `A Picture of ${randomPokemon}`;
+  }
+});
